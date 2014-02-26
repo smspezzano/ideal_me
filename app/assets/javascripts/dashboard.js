@@ -85,9 +85,9 @@ window.onload = function () {
     };
       
 
-    $("#addActivity").on("submit", function(event){
+    $("#addInterest").on("submit", function(event){
       event.preventDefault();
-      var newActivity = {body: $("#activity_body").val()};
+      var newActivity = {body: $("#interest_body").val()};
       var selectedVal = "";
       var selected = $("input[type='radio'][name='activity[cateogry_id]']:checked");
       if (selected.length > 0) {
