@@ -52,8 +52,6 @@ window.onload = function () {
     });    
   });
 
-
-
   var Interest = {};
 
   Interest.urls ={
@@ -105,8 +103,6 @@ window.onload = function () {
         }
         chartIdeal.render();
       });
-
-
     });
 
   });
@@ -151,14 +147,80 @@ window.onload = function () {
     chartIdeal.render();
 
 
+  var Activity = {};
+
+  Activity.urls ={
+    create : { path : "/real_charts/", method : 'post'}
+  };
+
+
+  Activity.saveActivity = function(activityReal, callback){
+    var data = { activity : activityReal };
+    $.ajax({
+      url : this.urls.create.path + gon.realChart + "/activities.json",
+      type : this.urls.create.method,
+      data : data}).done(callback);
+  };
+
+  Activity.doThis = function(fn){
+    fn.apply(Activity);
+    return this;
+  };
+
+
+  Activity.doThis(function(){
+    var _this = this;
+
+    var popShift = function(chartData, index, newInterest){
+      if (chartData[index].activity.length === 5){
+        chartData[index].activity.pop();
+      } 
+    chartData[index].activity.unshift(newInterest.body);
+    };
+      
+
+    $("#addActivity").on("submit", function(event){
+      event.preventDefault();
+      var newActivity = {body: $("#activity_body").val()};
+      var selectedVal = "";
+      var selected = $("input[type='radio'][name='activity']:checked");
+      if (selected.length > 0) {
+        selectedVal = selected.val();
+      }
+      newActivity.category_id = selectedVal;
+      _this.saveActivity(newActivity, function(data){
+        var chartData = chartReal.options.data[0].dataPoints;
+        if (data.activity.category_id === 1){
+          popShift(chartData, 1, newActivity);
+        } else if (data.activity.category_id === 2) {
+          popShift(chartData, 0, newActivity);
+        } else {
+          popShift(chartData, 2, newActivity);
+        }
+      RealData.updateChart(newActivity, data);
+      });
+    });
+
+  });
 
   var RealData = {};
 
-  RealData.urls = {
-    // url to update the IdealChart data
-    // /users/:user_id/ideal_charts/:id
-    create : { path : '/users/', method: 'create'}
-  };
+  RealData.updateChart = function(newActivity, data){
+    console.log(data);
+    console.log(newActivity);
+    var chartData = chartReal.options.data[0].dataPoints;
+    console.log(chartData);
+
+    if (newActivity.category_id === "1"){
+      chartData[1].y += 1;
+    } else if (newActivity.category_id === "2"){
+      chartData[0].y += 1;
+    } else {
+      chartData[2].y += 1;
+    }
+
+    chartReal.render();
+  };    
 
   var chartReal = new CanvasJS.Chart("realChartContainer",
     {
@@ -180,4 +242,4 @@ window.onload = function () {
 
   chartReal.render();
 
-  };
+};

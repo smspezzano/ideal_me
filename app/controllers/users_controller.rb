@@ -49,6 +49,8 @@ class UsersController < ApplicationController
     gon.realHealthActivites = realHealthArray
     gon.realIntellectActivites = realIntellectArray
 
+    gon.realChart = @real_chart.id
+
   end
 
 
