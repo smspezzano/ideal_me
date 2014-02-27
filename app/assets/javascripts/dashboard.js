@@ -197,7 +197,7 @@ window.onload = function () {
         } else {
           popShift(chartData, 2, newActivity);
         }
-      RealData.updateChart(newActivity, data);
+      RealData.updateChart(newActivity);
       });
     });
 
@@ -205,11 +205,8 @@ window.onload = function () {
 
   var RealData = {};
 
-  RealData.updateChart = function(newActivity, data){
-    console.log(data);
-    console.log(newActivity);
+  RealData.updateChart = function(newActivity){
     var chartData = chartReal.options.data[0].dataPoints;
-    console.log(chartData);
 
     if (newActivity.category_id === "1"){
       chartData[1].y += 1;
