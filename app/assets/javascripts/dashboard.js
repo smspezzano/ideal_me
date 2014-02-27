@@ -54,54 +54,54 @@ window.onload = function () {
 
 
 
-  var Activity = {};
+  var Interest = {};
 
-  Activity.urls ={
+  Interest.urls ={
     create : { path : "/real_charts/nil/activities.json", method : 'post'}
   };
 
-  Activity.saveActivity = function(activityReal, callback){
-    var data = { activity : activityReal };
+  Interest.saveInterest = function(interestIdeal, callback){
+    var data = { activity : interestIdeal };
     $.ajax({
       url : this.urls.create.path,
       type : this.urls.create.method,
       data : data}).done(callback);
   };
 
-  Activity.doThis = function(fn){
-    fn.apply(Activity);
+  Interest.doThis = function(fn){
+    fn.apply(Interest);
     return this;
   };
 
 
-  Activity.doThis(function(){
+  Interest.doThis(function(){
     var _this = this;
 
-    var popShift = function(chartData, index, newActivity){
+    var popShift = function(chartData, index, newInterest){
       if (chartData[index].activity.length === 5){
         chartData[index].activity.pop();
       } 
-    chartData[index].activity.unshift(newActivity.body);
+    chartData[index].activity.unshift(newInterest.body);
     };
       
 
     $("#addInterest").on("submit", function(event){
       event.preventDefault();
-      var newActivity = {body: $("#interest_body").val()};
+      var newInterest = {body: $("#interest_body").val()};
       var selectedVal = "";
       var selected = $("input[type='radio'][name='activity[cateogry_id]']:checked");
       if (selected.length > 0) {
         selectedVal = selected.val();
       }
-      newActivity.category_id = selectedVal;
-      _this.saveActivity(newActivity, function(data){
+      newInterest.category_id = selectedVal;
+      _this.saveInterest(newInterest, function(data){
         var chartData = chartIdeal.options.data[0].dataPoints;
         if (data.activity.category_id === 1){
-          popShift(chartData, 1, newActivity);
+          popShift(chartData, 1, newInterest);
         } else if (data.activity.category_id === 2) {
-          popShift(chartData, 0, newActivity);
+          popShift(chartData, 0, newInterest);
         } else {
-          popShift(chartData, 2, newActivity);
+          popShift(chartData, 2, newInterest);
         }
         chartIdeal.render();
       });
@@ -120,15 +120,15 @@ window.onload = function () {
 
        $(dataPoints).each(function(index, dataSet){
           dataSet.activity = dataSet.activity.splice(0,5);
-          var activities = dataSet.activity;
+          var interests = dataSet.activity;
           
-          $(activities).each(function(index, item){
+          $(interests).each(function(index, item){
             if(index === 0){
-              activities[index] = "<div>"+item;
-            } else if (index === activities.length - 1){
-              activities[index]= "</div><div>"+item+"</div>";
+              interests[index] = "<div>"+item;
+            } else if (index === interests.length - 1){
+              interests[index]= "</div><div>"+item+"</div>";
             } else {
-              activities[index] = "</div><div>"+item;
+              interests[index] = "</div><div>"+item;
             }
          });
        }); 
@@ -149,6 +149,16 @@ window.onload = function () {
    });
 
     chartIdeal.render();
+
+
+
+  var RealData = {};
+
+  RealData.urls = {
+    // url to update the IdealChart data
+    // /users/:user_id/ideal_charts/:id
+    create : { path : '/users/', method: 'create'}
+  };
 
   var chartReal = new CanvasJS.Chart("realChartContainer",
     {
