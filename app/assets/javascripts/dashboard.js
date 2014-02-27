@@ -107,12 +107,14 @@ window.onload = function () {
 
   });
 
-  var formatedChartData = function(){
-       var dataPoints = [
-       {  y: gon.idealchart.health_score, indexLabel: "Health", activity: gon.idealHealthInterests },
-       {  y: gon.idealchart.social_score, indexLabel: "Social", activity: gon.idealSocialInterests },
-       {  y: gon.idealchart.intellect_score, indexLabel: "Intellect", activity: gon.idealIntellectInterests }
-       ];
+  var dataPointsIdeal = [
+    {  y: gon.idealchart.health_score, indexLabel: "Health", activity: gon.idealHealthInterests },
+    {  y: gon.idealchart.social_score, indexLabel: "Social", activity: gon.idealSocialInterests },
+    {  y: gon.idealchart.intellect_score, indexLabel: "Intellect", activity: gon.idealIntellectInterests }
+  ];
+
+  var formatedChartData = function(data){
+       var dataPoints = data;
 
        $(dataPoints).each(function(index, dataSet){
           dataSet.activity = dataSet.activity.splice(0,5);
@@ -134,14 +136,14 @@ window.onload = function () {
        toolTipContent: "<div>{activity}</div>",
        dataPoints: dataPoints
         };
-      };
+  };
 
   var chartIdeal = new CanvasJS.Chart("idealChartContainer",
     {
       title:{
         text: "Ideal Chart"
       },
-      data: [formatedChartData()]
+      data: [formatedChartData(dataPointsIdeal)]
    });
 
     chartIdeal.render();
@@ -219,23 +221,19 @@ window.onload = function () {
     chartReal.render();
   };    
 
+  var dataPointsReal =[
+    {  y: gon.realSocialActivitesCount, indexLabel: "Health", activity: gon.realSocialActivites },
+    {  y: gon.realHealthActivitesCount, indexLabel: "Social", activity: gon.realHealthActivites },
+    {  y: gon.realIntellectActivitesCount, indexLabel: "Intellect", activity: gon.realIntellectActivites }
+  ];
+
   var chartReal = new CanvasJS.Chart("realChartContainer",
-    {
+  {
       title:{
         text: "Real Chart"
       },
-      data: [
-      {
-       type: "doughnut",
-       toolTipContent: "<div>{activity}</div>",
-       dataPoints: [
-       {  y: gon.realSocialActivitesCount, indexLabel: "Health", activity: gon.realSocialActivites },
-       {  y: gon.realHealthActivitesCount, indexLabel: "Social", activity: gon.realHealthActivites },
-       {  y: gon.realIntellectActivitesCount, indexLabel: "Intellect", activity: gon.realIntellectActivites }
-       ]
-     }
-     ]
-   });
+      data: [formatedChartData(dataPointsReal)]
+  });
 
   chartReal.render();
 
